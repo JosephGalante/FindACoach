@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <h1>Home</h1>
+        <h1>Page Not Found</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
-        <p>Home</p>
+        <p>Page Not Found</p>
       </div>
     </div>
   </div>
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'Home'
+  name: 'NotFound'
 }
 </script>
 
