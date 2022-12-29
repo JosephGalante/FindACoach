@@ -6,7 +6,7 @@ import BaseButton from './components/ui/BaseButton.vue'
 import BaseBadge from './components/ui/BaseBadge.vue'
 
 import router from './router'
-import store from './store/modules'
+import store from './store'
 
 const app = createApp(App)
 app.use(router)
