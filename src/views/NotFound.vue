@@ -1,24 +1,19 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <h1>Page Not Found</h1>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <p>Page Not Found</p>
-      </div>
-    </div>
-  </div>
+  <section>
+    <base-card>
+      <h2>Page not found</h2>
+      <p>
+        This page could not be found - maybe check out all our
+        <router-link to="/coaches">coaches</router-link>.
+      </p>
+    </base-card>
+  </section>
 </template>
 
 <script>
 export default {
-  name: 'NotFound'
+  name: 'NotFound',
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
