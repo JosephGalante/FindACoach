@@ -1,13 +1,29 @@
 <template>
+  <base-dialog
+    :show="!!error"
+    title="An error occurred"
+    @close="handleError">
+    <p>{{ error }}</p>
+  </base-dialog>
   <section>
     <coach-filter @change-filter="setFilter"></coach-filter>
   </section>
   <section>
     <base-card>
       <div class="controls">
-        <base-button mode="outline">Refresh</base-button>
-        <base-button v-if="!isCoach" link to="/register">Register</base-button>
+        <base-button
+          mode="outline"
+          @click="loadCoaches"
+          >Refresh</base-button
+        >
+        <base-button
+          v-if="!isCoach && !isLoading"
+          link
+          to="/register"
+          >Register</base-button
+        >
       </div>
+      <div v-if="isLoading"><base-spinner></base-spinner></div>
       <ul v-if="hasCoaches">
         <CoachItem
           v-for="coach in filteredCoaches"
@@ -16,8 +32,7 @@
           :firstName="coach.firstName"
           :lastName="coach.lastName"
           :areas="coach.areas"
-          :rate="coach.hourlyRate"
-        ></CoachItem>
+          :rate="coach.hourlyRate"></CoachItem>
       </ul>
       <h3 v-else>No coaches found.</h3>
     </base-card>
@@ -38,6 +53,8 @@ export default {
   },
   data() {
     return {
+      error: null,
+      isLoading: true,
       activeFilters: {
         frontend: true,
         backend: true,
@@ -65,13 +82,28 @@ export default {
       })
     },
     hasCoaches() {
-      return this.$store.getters['coaches/hasCoaches']
+      return !this.loading && this.$store.getters['coaches/hasCoaches']
     },
   },
   methods: {
     setFilter(updatedFilters) {
       this.activeFilters = updatedFilters
     },
+    async loadCoaches() {
+      this.isLoading = true
+      try {
+        await this.$store.dispatch('coaches/loadCoaches')
+      } catch (error) {
+        this.error = error.message || 'Something went wrong'
+      }
+      this.isLoading = false
+    },
+    handleError() {
+      this.error = null
+    },
+  },
+  created() {
+    this.loadCoaches()
   },
 }
 </script>
