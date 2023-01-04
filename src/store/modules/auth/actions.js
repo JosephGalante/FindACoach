@@ -2,7 +2,7 @@ export default {
   login() {},
   async signup(context, payload) {
     const response = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAWTTJZKhZoRWWjLGc-rvzWw2TBjO5ReBY`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]`,
       {
         method: 'POST',
         body: JSON.stringify({
