@@ -53,7 +53,7 @@ export default {
     return {
       email: null,
       password: null,
-      formIsValid: false,
+      formIsValid: true,
       mode: 'Login',
       isLoading: false,
       error: null,
@@ -87,18 +87,20 @@ export default {
         return
       }
       this.isLoading = true
+
+      const payload = {
+        email: this.email,
+        password: this.password,
+      }
+
       try {
         if (this.mode === 'Login') {
-          await this.$store.dispatch('login', {
-            email: this.email,
-            password: this.password,
-          })
+          await this.$store.dispatch('login', payload)
         } else {
-          await this.$store.dispatch('signup', {
-            email: this.email,
-            password: this.password,
-          })
+          await this.$store.dispatch('signup', payload)
         }
+        const redirectURL = `/${this.$route.query.redirect || 'coaches'}`
+        this.$router.replace(redirectURL)
       } catch (error) {
         this.error = error.message || 'Failed to authenticate'
       }

@@ -8,8 +8,14 @@
         <li>
           <router-link to="/coaches">All Coaches</router-link>
         </li>
-        <li>
+        <li v-if="isLoggedIn">
           <router-link to="/requests">Requests</router-link>
+        </li>
+        <li v-else>
+          <router-link to="/auth">Login</router-link>
+        </li>
+        <li v-if="isLoggedIn">
+          <base-button @click="logout"> Logout </base-button>
         </li>
       </ul>
     </nav>
@@ -19,6 +25,20 @@
 <script>
 export default {
   name: 'TheNavbar',
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated
+    },
+    isCoach() {
+      return this.$store.getters['coaches/isCoach']
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+      this.$router.replace('/coaches')
+    },
+  },
 }
 </script>
 
