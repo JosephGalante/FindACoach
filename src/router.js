@@ -1,12 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-import CoachDetail from './views/coaches/CoachDetails.vue'
-import CoachesList from './views/coaches/CoachesList.vue'
-import ContactCoach from './views/requests/ContactCoach.vue'
-import CoachRegister from './views/coaches/CoachRegister.vue'
-import RequestsReceived from './views/requests/RequestsReceived.vue'
-import NotFound from './views/NotFound.vue'
-import UserAuth from './views/auth/UserAuth.vue'
 import store from './store/index.js'
 
 const router = createRouter({
@@ -20,34 +12,34 @@ const router = createRouter({
       path: '/register',
       meta: { requiresAuth: true },
       name: 'Register',
-      component: CoachRegister,
+      component: () => import('./views/coaches/CoachRegister.vue'),
     },
     {
       path: '/requests',
       meta: { requiresAuth: true },
       name: 'Requests',
-      component: RequestsReceived,
+      component: () => import('./views/requests/RequestsReceived.vue'),
     },
     {
       path: '/contact',
       name: 'Contact',
-      component: ContactCoach,
+      component: () => import('./views/requests/ContactCoach.vue'),
     },
     {
       path: '/coaches',
       name: 'CoachesList',
-      component: CoachesList,
+      component: () => import('./views/coaches/CoachesList.vue'),
     },
     {
       path: '/coaches/:id',
       name: 'CoachDetail',
-      component: CoachDetail,
+      component:  () => import('./views/coaches/CoachDetails.vue'),
       props: true,
       children: [
         {
           path: 'contact',
           name: 'ContactCoach',
-          component: ContactCoach,
+          component: () => import('./views/requests/ContactCoach.vue'),
         },
       ],
     },
@@ -55,12 +47,12 @@ const router = createRouter({
       path: '/auth',
       meta: { requiresUnauth: true },
       name: 'Auth',
-      component: UserAuth,
+      component: () => import('./views/auth/UserAuth.vue'),
     },
     {
       path: '/:notFound(.*)',
       name: 'NotFound',
-      component: NotFound,
+      component: () => import('./views/NotFound.vue'),
     },
   ],
 })
