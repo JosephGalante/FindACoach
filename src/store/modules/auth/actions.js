@@ -41,6 +41,55 @@ export default {
       throw error
     }
 
+    // send a verification email to the provided email using Firebase when signing up
+    if (mode === 'signup') {
+      const sendEmailVerificationUrl = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.VUE_APP_GOOGLE_API_KEY}`
+      const sendEmailVerificationResponse = await fetch(
+        sendEmailVerificationUrl,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            requestType: 'VERIFY_EMAIL',
+            idToken: responseData.idToken,
+          }),
+        }
+      )
+
+      const sendEmailVerificationResponseData =
+        await sendEmailVerificationResponse.json()
+
+      if (!sendEmailVerificationResponse.ok) {
+        const error = new Error(
+          sendEmailVerificationResponseData.message ||
+            'Failed to send verification email'
+        )
+        throw error
+      }
+    }
+
+    // require a user to have verified their email before they can login/sign-up
+    const getAccountInfoUrl = `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.VUE_APP_GOOGLE_API_KEY}`
+    const getAccountInfoResponse = await fetch(getAccountInfoUrl, {
+      method: 'POST',
+      body: JSON.stringify({
+        idToken: responseData.idToken,
+      }),
+    })
+
+    const getAccountInfoResponseData = await getAccountInfoResponse.json()
+
+    if (!getAccountInfoResponse.ok) {
+      const error = new Error(
+        getAccountInfoResponseData.message || 'Failed to get account info'
+      )
+      throw error
+    }
+
+    if (!getAccountInfoResponseData.users[0].emailVerified) {
+      const error = new Error('Please verify your email before logging in')
+      throw error
+    }
+
     // unary operator '+' converts string to number
     const expiresIn = +responseData.expiresIn * 1000
     const expirationDate = new Date().getTime() + expiresIn
@@ -98,5 +147,5 @@ export default {
   autoLogout(context) {
     context.dispatch('logout')
     context.commit('setAutoLogout')
-  }
+  },
 }
