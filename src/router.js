@@ -1,59 +1,46 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from './store/index.js'
 
+const CoachRegister = () => import('./views/coaches/CoachRegister.vue')
+const RequestsReceived = () => import('./views/requests/RequestsReceived.vue')
+const ContactCoach = () => import('./views/requests/ContactCoach.vue')
+const CoachDetails = () => import('./views/coaches/CoachDetails.vue')
+const CoachesList = () => import('./views/coaches/CoachesList.vue')
+const UserAuth = () => import('./views/auth/UserAuth.vue')
+const NotFound = () => import('./views/NotFound.vue')
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    {
-      path: '/',
-      redirect: '/coaches',
-    },
-    {
-      path: '/register',
-      meta: { requiresAuth: true },
-      name: 'Register',
-      component: () => import('./views/coaches/CoachRegister.vue'),
-    },
-    {
-      path: '/requests',
-      meta: { requiresAuth: true },
-      name: 'Requests',
-      component: () => import('./views/requests/RequestsReceived.vue'),
-    },
-    {
-      path: '/contact',
-      name: 'Contact',
-      component: () => import('./views/requests/ContactCoach.vue'),
-    },
-    {
-      path: '/coaches',
-      name: 'CoachesList',
-      component: () => import('./views/coaches/CoachesList.vue'),
-    },
+    { path: '/', redirect: '/coaches' },
+    { path: '/coaches', component: CoachesList },
     {
       path: '/coaches/:id',
-      name: 'CoachDetail',
-      component:  () => import('./views/coaches/CoachDetails.vue'),
+      component: CoachDetails,
       props: true,
       children: [
         {
           path: 'contact',
-          name: 'ContactCoach',
-          component: () => import('./views/requests/ContactCoach.vue'),
+          component: ContactCoach,
         },
       ],
     },
     {
-      path: '/auth',
-      meta: { requiresUnauth: true },
-      name: 'Auth',
-      component: () => import('./views/auth/UserAuth.vue'),
+      path: '/register',
+      meta: { requiresAuth: true },
+      component: CoachRegister,
     },
     {
-      path: '/:notFound(.*)',
-      name: 'NotFound',
-      component: () => import('./views/NotFound.vue'),
+      path: '/requests',
+      meta: { requiresAuth: true },
+      component: RequestsReceived,
     },
+    {
+      path: '/auth',
+      meta: { requiresUnauth: true },
+      component: UserAuth,
+    },
+    { path: '/:notFound(.*)', component: NotFound },
   ],
 })
 
